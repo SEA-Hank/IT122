@@ -7,12 +7,12 @@ const server = http.createServer((req, res) => {
   switch (path[0]) {
     case "/":
       res.writeHead(200, { "Content-Type": "text/plain" });
-      res.write("get the detail by id, example: /detail?id=1\n\n");
+      res.write("get the detail by id [1-8], example: /detail?id=1\n\n");
       res.end(JSON.stringify(data.getAll(), null, 2));
       break;
     case "/detail":
       let param = querystring.parse(path[1]);
-      res.write("get the detail by id, example: /detail?id=1\n\n");
+      res.write("get the detail by id [1-8], example: /detail?id=1\n\n");
       res.end(JSON.stringify(data.getItem(param.id), null, 2));
       break;
     case "/about":
