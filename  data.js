@@ -83,4 +83,4 @@ const getItem = (id) => {
   });
 };
 
-module.exports = { getAll, getItem };
+export { getAll, getItem };
