@@ -11,6 +11,7 @@ app.get("/", function (req, res) {
   res.render("home", { title: "IT 122 home page", items: getAll() });
 });
 app.get("/detail/:id([0-9]+)", function (req, res) {
+  console.log(req.query);
   let item = getItem(req.params.id);
   res.render("detail", {
     title: req.query.title || "IT 122 detail page",
