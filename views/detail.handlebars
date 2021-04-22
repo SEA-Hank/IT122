@@ -1,5 +1,6 @@
 <p class="title_p">IT122 DETAIL PAGE</p>
 <P><a class="default_a" href="/">BACK TO HOME PAGE</a></P>
+{{#if item}}
 {{#with item}}
 <table id="detail_page_table">
     <tr>
@@ -32,3 +33,6 @@
     </tr>
 </table>
 {{/with}}
+{{else}}
+<p>ITEM NOT FOUND</p>
+{{/if}}
