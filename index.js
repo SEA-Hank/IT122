@@ -12,7 +12,10 @@ app.get("/", function (req, res) {
 });
 app.get("/detail/:id([0-9]+)", function (req, res) {
   let item = getItem(req.params.id);
-  res.render("detail", { title: "IT 122 detail page", item: item });
+  res.render("detail", {
+    title: req.query.title || "IT 122 detail page",
+    item: item,
+  });
 });
 app.get("/about", function (req, res) {
   res.set("Content-Type", "text/plain");
