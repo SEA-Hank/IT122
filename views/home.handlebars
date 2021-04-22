@@ -1,0 +1,15 @@
+<p class="title_p">IT122 HOME PAGE</p>
+<table id="home_page_table">
+    <tr>
+        <td>ITEM NAME</td>
+        <td>ITEM PRICE</td>
+        <td>MORE</td>
+    </tr>
+    {{#each items}}
+    <tr>
+        <td>{{this.name}}</td>
+        <td>$ {{this.price}}</td>
+        <td> <a class="default_a" href="/detail/{{this.id}}">MORE</a></td>
+    </tr>
+    {{/each}}
+</table>

@@ -1,28 +1,24 @@
 import { getAll, getItem } from "./ data.js";
-import http from "http";
-import querystring from "querystring";
-const server = http.createServer((req, res) => {
-  let path = req.url.toLowerCase().split("?");
-  // let regex = /^(\/detail)\?id=(\d+)$/;
-  switch (path[0]) {
-    case "/":
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.write("get the detail by id [1-8], example: /detail?id=1\n\n");
-      res.end(JSON.stringify(getAll(), null, 2));
-      break;
-    case "/detail":
-      let param = querystring.parse(path[1]);
-      res.write("get the detail by id [1-8], example: /detail?id=1\n\n");
-      res.end(JSON.stringify(getItem(param.id), null, 2));
-      break;
-    case "/about":
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end(`This is IT122 Hank's about page\n\rI love coding`);
-      break;
-    default:
-      res.writeHead(404, "Not found", { "Content-Type": "text/plain" });
-      res.end();
-      break;
-  }
+import express from "express";
+import exphbs from "express-handlebars";
+const app = express();
+const port = 3000;
+app.use(express.static("public"));
+app.engine("handlebars", exphbs());
+app.set("view engine", "handlebars");
+
+app.get("/", function (req, res) {
+  res.render("home", { title: "IT 122 home page", items: getAll() });
 });
-server.listen(3000);
+app.get("/detail/:id([0-9]+)", function (req, res) {
+  let item = getItem(req.params.id);
+  res.render("detail", { title: "IT 122 detail page", item: item });
+});
+app.get("/about", function (req, res) {
+  res.set("Content-Type", "text/plain");
+  res.send(`This is IT122 Hank's about page\n\rI love coding`);
+});
+app.get(function (req, res) {
+  res.sendStatus(404);
+});
+app.listen(port);
