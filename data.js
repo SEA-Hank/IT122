@@ -1,4 +1,4 @@
-const items = [
+let items = [
   {
     id: 1,
     name: "Razer Cynosa Chroma Gaming Keyboard",
@@ -83,4 +83,27 @@ const getItem = (id) => {
   });
 };
 
-export { getAll, getItem };
+const addItem = (newItem) => {
+  let found = items.find((e) => {
+    return e.name == newItem.name;
+  });
+  if (found) {
+    return { succeed: false, message: "item already existed" };
+  }
+  items.push(newItem);
+  return { succeed: true, message: "item added succeeded" };
+};
+
+const deleteItem = (item) => {
+  let length = items.length;
+  items = items.filter((e) => {
+    e.name != item.name;
+  });
+  return {
+    succeed: length != items.length,
+    message:
+      length != items.length ? "delete item succeeded" : "item not found",
+  };
+};
+
+export { getAll, getItem, addItem, deleteItem };
