@@ -3,8 +3,8 @@ let items = [
     id: 1,
     name: "Razer Cynosa Chroma Gaming Keyboard",
     Brand: "Razer",
-    ranking: "4",
-    comments: "11,292",
+    ranking: 4,
+    comments: 11292,
     price: 56.99,
     GET: "Tomorrow, Mar 11",
   },
@@ -12,8 +12,8 @@ let items = [
     id: 2,
     name: "Razer Ornata Chroma Gaming Keyboard",
     Brand: "Razer",
-    ranking: "4",
-    comments: "7,206",
+    ranking: 4,
+    comments: 7206,
     price: 79.0,
     GET: "Today, Mar 10",
   },
@@ -21,8 +21,8 @@ let items = [
     id: 3,
     name: "Corsair K100 RGB Mechanical Gaming Keyboard",
     Brand: "Corsair",
-    ranking: "5",
-    comments: "490",
+    ranking: 5,
+    comments: 490,
     price: 199.99,
     GET: "Tomorrow, Mar 11",
   },
@@ -30,8 +30,8 @@ let items = [
     id: 4,
     name: "SteelSeries Apex 7 TKL Compact Mechanical Gaming Keyboard",
     Brand: "SteelSeries",
-    ranking: "5",
-    comments: "8,053",
+    ranking: 5,
+    comments: 8053,
     price: 124.99,
     GET: "Tomorrow, Mar 12",
   },
@@ -39,8 +39,8 @@ let items = [
     id: 5,
     name: "Corsair Nightsword RGB",
     Brand: "Corsair",
-    ranking: "4",
-    comments: "2,567",
+    ranking: 4,
+    comments: 2567,
     price: 70,
     GET: "Tomorrow, Mar 14",
   },
@@ -48,8 +48,8 @@ let items = [
     id: 6,
     name: "Corsair M65 RGB Elite",
     Brand: "Corsair",
-    ranking: "4",
-    comments: "2,251",
+    ranking: 4,
+    comments: 2251,
     price: 49.99,
     GET: "Today, Mar 10",
   },
@@ -57,8 +57,8 @@ let items = [
     id: 7,
     name: "Razer Naga Trinity Gaming Mouse",
     Brand: "Razer",
-    ranking: "4",
-    comments: "9,940",
+    ranking: 4,
+    comments: 9940,
     price: 70.99,
     GET: "Today, Mar 10",
   },
@@ -66,8 +66,8 @@ let items = [
     id: 8,
     name: "SteelSeries Rival 600 Gaming Mouse",
     Brand: "SteelSeries",
-    ranking: "4",
-    comments: "5,094",
+    ranking: 4,
+    comments: 5094,
     price: 69.99,
     GET: "Tomorrow, Mar 11",
   },
@@ -88,10 +88,10 @@ const addItem = (newItem) => {
     return e.name == newItem.name;
   });
   if (found) {
-    return { succeed: false, message: "item already existed" };
+    return { success: false, message: "item already existed" };
   }
   items.push(newItem);
-  return { succeed: true, message: "item added succeeded" };
+  return { success: true, message: "item added successfully" };
 };
 
 const deleteItem = (item) => {
@@ -100,9 +100,9 @@ const deleteItem = (item) => {
     e.name != item.name;
   });
   return {
-    succeed: length != items.length,
+    success: length != items.length,
     message:
-      length != items.length ? "delete item succeeded" : "item not found",
+      length != items.length ? "delete item successfully" : "item not found",
   };
 };
 
