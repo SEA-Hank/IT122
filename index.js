@@ -1,6 +1,7 @@
-import { getAll, getItem } from "./data.js";
+//import { getAll, getItem } from "./data.js";
 import express from "express";
 import exphbs from "express-handlebars";
+import { keyboards } from "./models/keyboards.js";
 const app = express();
 const port = 3000;
 app.use(express.static("public"));
@@ -8,15 +9,27 @@ app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
 app.get("/", (req, res) => {
-  res.render("home", { title: "IT 122 home page", items: getAll() });
+  keyboards
+    .find()
+    .lean()
+    .then((data) => {
+      console.log(data);
+      res.render("home", { title: "IT 122 home page", items: data });
+    })
+    .catch((err) => next(err));
 });
 app.get("/detail/:id([0-9]+)", (req, res) => {
   console.log(req.query);
-  let item = getItem(req.params.id);
-  res.render("detail", {
-    title: req.query.title || "IT 122 detail page",
-    item: item,
-  });
+  keyboards
+    .findOne({ id: req.params.id })
+    .lean()
+    .then((keyboard) => {
+      res.render("detail", {
+        title: req.query.title || "IT 122 detail page",
+        item: keyboard,
+      });
+    })
+    .catch((err) => next(err));
 });
 app.get("/about", (req, res) => {
   res.set("Content-Type", "text/plain");
