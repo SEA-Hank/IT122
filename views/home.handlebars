@@ -4,12 +4,14 @@
         <td>ITEM NAME</td>
         <td>ITEM PRICE</td>
         <td>MORE</td>
+        <td>DELETE</td>
     </tr>
     {{#each items}}
     <tr>
         <td>{{this.name}}</td>
         <td>$ {{this.price}}</td>
         <td> <a class="default_a" href="/detail/{{this.id}}?title={{this.name}}">MORE</a></td>
+        <td> <a class="default_a" href="/delete/{{this.id}}">DELETE</a></td>
     </tr>
     {{/each}}
 </table>

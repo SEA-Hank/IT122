@@ -47,3 +47,13 @@ table#detail_page_table td:first-child {
 table#detail_page_table td:last-child {
   background-color: #ccf2f4;
 }
+.span_delete {
+  color: #ce1212;
+  font-weight: 900;
+  font-style: italic;
+}
+
+.span_count {
+  color: #1687a7;
+  font-weight: 900;
+}
