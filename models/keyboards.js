@@ -2,15 +2,18 @@ import mongoose from "mongoose";
 import { connectionString } from "../lib/credentials.js";
 const { Schema } = mongoose;
 
-const keyboardsSchema = new Schema({
-  id: Number,
-  name: String,
-  Brand: String,
-  ranking: Number,
-  comments: Number,
-  price: Number,
-  GET: String,
-});
+const keyboardsSchema = new Schema(
+  {
+    id: Number,
+    name: String,
+    Brand: String,
+    ranking: Number,
+    comments: Number,
+    price: Number,
+    GET: String,
+  },
+  { versionKey: false }
+);
 
 mongoose.connect(connectionString, {
   useNewUrlParser: true,

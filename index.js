@@ -1,10 +1,20 @@
 //import { getAll, getItem } from "./data.js";
 import express from "express";
 import exphbs from "express-handlebars";
+import cors from "cors";
 import { keyboards } from "./models/keyboards.js";
+import { apiRoute } from "./apiRoute.js";
+
 const app = express();
 const port = 3000;
+
 app.use(express.static("public"));
+app.use(express.json());
+//All API's accessible from other domains
+app.use("/api", cors());
+//All API's in the apiRoute.js
+app.use("/api", apiRoute);
+
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
