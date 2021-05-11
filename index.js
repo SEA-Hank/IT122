@@ -8,7 +8,7 @@ app.use(express.static("public"));
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
-app.get("/", (req, res) => {
+app.get("/", (req, res, next) => {
   keyboards
     .find()
     .lean()
@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
     })
     .catch((err) => next(err));
 });
-app.get("/detail/:id([0-9]+)", (req, res) => {
+app.get("/detail/:id([0-9]+)", (req, res, next) => {
   console.log(req.query);
   keyboards
     .findOne({ id: req.params.id })
@@ -31,7 +31,7 @@ app.get("/detail/:id([0-9]+)", (req, res) => {
     })
     .catch((err) => next(err));
 });
-app.get("/delete/:id([0-9]+)", (req, res) => {
+app.get("/delete/:id([0-9]+)", (req, res, next) => {
   keyboards.findOneAndDelete({ id: req.params.id }, (err, result) => {
     if (err) {
       next(err);
