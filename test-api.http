@@ -13,7 +13,7 @@ POST http://localhost:3000/api/update/1 HTTP/1.1
 content-type: application/json
 
 {
-    "comments":888
+    "comments":999
 }
 
 ###
@@ -21,11 +21,11 @@ POST http://localhost:3000/api/add HTTP/1.1
 content-type: application/json
 
 {
-    "id": 8,
+  "id": 8,
     "name": "SteelSeries Rival 600 Gaming Mouse",
     "Brand": "SteelSeries",
     "ranking": 4,
     "comments": 5094,
     "price": 69.99,
     "GET": "Tomorrow, Mar 11"
-}
+  }

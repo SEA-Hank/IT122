@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-import { connectionString } from "../lib/credentials.js";
+import {
+  connectionString,
+  onlineConnectionString,
+} from "../lib/credentials.js";
 const { Schema } = mongoose;
 
 const keyboardsSchema = new Schema(
@@ -15,7 +18,7 @@ const keyboardsSchema = new Schema(
   { versionKey: false }
 );
 
-mongoose.connect(connectionString, {
+mongoose.connect(onlineConnectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   dbName: "it122",
@@ -24,9 +27,3 @@ mongoose.connect(connectionString, {
 const keyboards = mongoose.model("keyboards", keyboardsSchema);
 
 export { keyboards };
-
-// keyboards.find({}, function (a, b, c) {
-//   console.log(a);
-//   console.log(b);
-//   console.log(c);
-// });
