@@ -24,7 +24,10 @@ app.get("/", (req, res, next) => {
     .lean()
     .then((data) => {
       console.log(data);
-      res.render("home", { title: "IT 122 home page", items: data });
+      res.render("home-react", {
+        title: "IT 122 home page",
+        items: JSON.stringify(data),
+      });
     })
     .catch((err) => next(err));
 });

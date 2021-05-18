@@ -1,0 +1,48 @@
+
+<p class="title_p">IT122 HOME PAGE</p>
+<div id="root"></div>
+<script src="/js/react.development.js"></script>
+<script src="/js/react-dom.development.js"></script>
+<script src="/js/babel.min.js"></script>
+<script type="text/babel">
+   let Item = ({name,price,id}) => {
+   let detailClick = () => {
+       location.href=`/detail/${id}?title=${name}`;
+    }
+    let deleteClick = () => {
+        location.href =`/delete/${id}`;
+    }
+    return (
+    <tr>
+        <td>{name}</td>
+        <td>{price}</td>
+        <td><a className="default_a" onClick={detailClick} href="javascript:void;">MORE</a></td>
+        <td><a className="default_a" onClick={deleteClick} href="javascript:void;">DELETE</a></td>
+    </tr>);
+   }
+
+   let ItemList = ({items}) => {
+        let list = items.map((item)=>{
+            return <Item key={item.id} name={item.name} id={item.id} price={item.price}></Item>
+        });
+        return (<>{list}</>);
+   }
+
+   let App = (props) => {
+     let items = {{{items}}};
+     return (
+        <table id="home_page_table">
+        <tbody>
+        <tr>
+        <td>ITEM NAME</td>
+        <td>ITEM PRICE</td>
+        <td>MORE</td>
+        <td>DELETE</td>
+        </tr>
+           <ItemList items={items}></ItemList>
+        </tbody>
+        </table>
+     );
+   }
+   ReactDOM.render(<App />, document.getElementById('root'));
+</script>
