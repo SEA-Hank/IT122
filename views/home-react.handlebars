@@ -5,44 +5,117 @@
 <script src="/js/react-dom.development.js"></script>
 <script src="/js/babel.min.js"></script>
 <script type="text/babel">
-   let Item = ({name,price,id}) => {
-   let detailClick = () => {
-       location.href=`/detail/${id}?title=${name}`;
+  class Item extends React.Component {
+    constructor(props) {
+      super(props);
     }
-    let deleteClick = () => {
-        location.href =`/delete/${id}`;
+    
+    detailClick = ()=>{
+      this.props.onSelect(this.props.item);
     }
-    return (
-    <tr>
+
+    render() {
+      let {name,price} = this.props.item;
+      return (
+      <tr>
         <td>{name}</td>
         <td>{price}</td>
-        <td><a className="default_a" onClick={detailClick} href="javascript:void;">MORE</a></td>
-        <td><a className="default_a" onClick={deleteClick} href="javascript:void;">DELETE</a></td>
-    </tr>);
-   }
+        <td><a className="default_a" onClick={this.detailClick}>detail</a></td>
+      </tr>
+      );
+    }
+  } 
 
-   let ItemList = ({items}) => {
-        let list = items.map((item)=>{
-            return <Item key={item.id} name={item.name} id={item.id} price={item.price}></Item>
-        });
-        return (<>{list}</>);
-   }
+  class ItemList extends React.Component {
+    constructor(props) {
+      super(props);
+    }
 
-   let App = (props) => {
-     let items = {{{items}}};
-     return (
+    render() {
+      let list = this.props.items.map((item)=>{
+        return <Item key={item.id}  onSelect={this.props.onSelect} item={item}></Item>
+      });
+      return (<>{list}</>);
+    }
+  }
+
+  class Detail extends React.Component {
+    constructor(props){
+      super(props);
+    }
+
+    hide = ()=>{
+       this.props.onSelect(null);
+    }
+
+    render(){
+      let {id,name,Brand,ranking,comments,price,GET} = this.props.item;
+      return (
+        <div id="detail">
+          <p>DETAIL</p>
+          <table id="detail_page_table">
+            <tr>
+              <td>ID</td>
+              <td>{id}</td>
+            </tr>
+            <tr>
+                <td>NAME</td>
+                <td>{name}</td>
+            </tr>
+            <tr>
+                <td>BRAND</td>
+                <td>{Brand}</td>
+            </tr>
+            <tr>
+                <td>RANKING</td>
+                <td>{ranking}</td>
+            </tr>
+            <tr>
+                <td>COMMENTS</td>
+                <td>{comments}</td>
+            </tr>
+            <tr>
+                <td>PRICE</td>
+                <td>{price}</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>{GET}</td>
+            </tr>
+        </table>
+        <p> <a className="default_a" onClick={this.hide}>hide detail</a> </p>
+      </div>
+      );
+    }
+  }
+
+  class App extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state={ items: {{{items}}}, currentItem : null }
+    }
+
+    onSelect = (item)=>{
+        this.setState({currentItem:item});
+    }
+
+    render() {
+      return (
+        <div>
         <table id="home_page_table">
         <tbody>
         <tr>
         <td>ITEM NAME</td>
         <td>ITEM PRICE</td>
-        <td>MORE</td>
-        <td>DELETE</td>
+        <td>DETAIL</td>
         </tr>
-           <ItemList items={items}></ItemList>
+           <ItemList items={this.state.items} onSelect={this.onSelect}></ItemList>
         </tbody>
         </table>
+        {this.state.currentItem && <Detail item={this.state.currentItem} onSelect={this.onSelect}></Detail>}
+        </div>
      );
-   }
-   ReactDOM.render(<App />, document.getElementById('root'));
+    }
+  }
+  ReactDOM.render(<App />, document.getElementById('root'));
 </script>

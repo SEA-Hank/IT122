@@ -25,6 +25,8 @@ table#home_page_table tr:nth-child(odd) {
 a.default_a {
   color: #000;
   font-style: italic;
+  cursor: pointer;
+  text-decoration: underline;
 }
 a.default_a:active,
 a.default_a:link {
