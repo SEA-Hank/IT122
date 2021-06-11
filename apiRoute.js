@@ -62,13 +62,17 @@ apiRoute.post("/update/:id([0-9]+)", (req, res) => {
 });
 
 apiRoute.post("/add", (req, res) => {
+  let time = new Date();
+  let id = parseInt(time.getSeconds() + "" + time.getMilliseconds());
+  req.body = { ...req.body, id: id };
+  delete req.body["_id"];
   keyboards.create(req.body, (err, result) => {
     if (err) {
       res.json({ success: false, error: err.message, method: "add" });
       return;
     }
     if (result) {
-      res.json({ success: true });
+      res.json({ success: true, id: id, _id: result._id });
       return;
     }
   });

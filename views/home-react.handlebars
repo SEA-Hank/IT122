@@ -42,47 +42,128 @@
   class Detail extends React.Component {
     constructor(props){
       super(props);
+      this.state =  {item:{ _id:"", id :"", name:"", Brand:"", ranking:"", comments:"", price:"", GET:""},error:null,success:null,showResult:false};
     }
 
     hide = ()=>{
        this.props.onSelect(null);
     }
 
+    onChange = (event)=>{
+      this.state.item[event.target.name] = event.target.value;
+      this.setState({item : this.state.item });
+    }
+
+    fetchData = (url,method,data) => {
+      this.setState({error: null,success:null});
+      let reqinfo  = {
+        method: method, 
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      };
+      if(method != "GET"){
+        reqinfo.body = data;
+      }
+      return fetch(url,reqinfo ).catch(error => {
+        this.setState({error: error.message})
+        return Promise.reject();
+      })
+      .then(response => response.json())
+      .then(result=>{
+          if(!result.success){
+            this.setState({error: result.error})
+            return Promise.reject();
+          }
+          this.setState({success:true});
+          return result;
+      });
+    }
+
+    SaveClick=()=>{
+      //update
+      if(this.state.item._id){
+        this.fetchData(`/api/update/${this.state.item.id}`,'POST', JSON.stringify(this.state.item)).then(result=>{
+          this.props.onUpdate(this.state.item);
+        });
+        return;
+      }
+      //create
+      this.fetchData("/api/add",'POST', JSON.stringify(this.state.item)).then(result=>{
+        this.setState({showResult:true});
+        this.props.onCreate({...this.state.item, id:result.id , _id:result._id });
+      });
+    }
+
+    CleanClick = ()=>{
+      this.setState({error:null,success:null});
+      this.props.onSelect({ _id:"", id :"", name:"", Brand:"", ranking:"", comments:"", price:"", GET:""});
+    }
+
+    DeleteClick = ()=>{
+      this.fetchData(`/api/delete/${this.state.item.id}`,'GET', {}).then(result=>{
+        this.setState({showResult:true});
+        this.props.onDelete(this.state.item.id);
+        this.props.onSelect({ _id:"", id :"", name:"", Brand:"", ranking:"", comments:"", price:"", GET:""});
+      });
+    }
+
+    static getDerivedStateFromProps(props, state){
+      if(props.item._id != state.item._id){
+         if(state.showResult){
+           return { item: props.item, showResult:false};
+         }
+         return { item: props.item , error:null,success:null }
+      }
+      return null;
+    }
+
     render(){
-      let {id,name,Brand,ranking,comments,price,GET} = this.props.item;
+      let {id,name,Brand,ranking,comments,price,GET} = this.state.item;
       return (
         <div id="detail">
           <p>DETAIL</p>
           <table id="detail_page_table">
+            <tbody>
             <tr>
               <td>ID</td>
-              <td>{id}</td>
+              <td>{id || "auto-generate"}</td>
             </tr>
             <tr>
                 <td>NAME</td>
-                <td>{name}</td>
+                <td><input placeholder="string" className="detail-input" type="text" name="name" onChange={this.onChange} value={name} /></td>
             </tr>
             <tr>
                 <td>BRAND</td>
-                <td>{Brand}</td>
+                <td><input placeholder="string" className="detail-input" type="text" name="Brand" onChange={this.onChange} value={Brand} /></td>
             </tr>
             <tr>
                 <td>RANKING</td>
-                <td>{ranking}</td>
+                <td><input placeholder="number" className="detail-input" type="text" name="ranking" onChange={this.onChange} value={ranking} /></td>
             </tr>
             <tr>
                 <td>COMMENTS</td>
-                <td>{comments}</td>
+                <td><input placeholder="number" className="detail-input" type="text" name="comments" onChange={this.onChange} value={comments} /></td>
             </tr>
             <tr>
                 <td>PRICE</td>
-                <td>{price}</td>
+                <td><input placeholder="number" className="detail-input" type="text" name="price" onChange={this.onChange} value={price} /></td>
             </tr>
             <tr>
                 <td>GET</td>
-                <td>{GET}</td>
+                <td><input placeholder="string" className="detail-input" type="text" name="GET" onChange={this.onChange} value={GET} /></td>
             </tr>
+            <tr>
+              <td>Operation</td>
+              <td> <button className="detail-btn" onClick={this.CleanClick}>Clean</button>
+                   <button className="detail-btn" onClick={this.SaveClick}>Save</button> 
+                   <button className="detail-btn" onClick={this.DeleteClick}>Delete</button>
+              </td>
+            </tr>
+            </tbody>
         </table>
+        {this.state.error && <p className="error-message">Error: {this.state.error}</p>}
+        {this.state.success && <p className="success-message">Success !!!</p>}
         <p> <a className="default_a" onClick={this.hide}>hide detail</a> </p>
       </div>
       );
@@ -92,11 +173,33 @@
   class App extends React.Component {
     constructor(props) {
       super(props);
-      this.state={ items: {{{items}}}, currentItem : null }
+      this.state={ items: {{{items}}}, currentItem : {} }
     }
 
     onSelect = (item)=>{
         this.setState({currentItem:item});
+    }
+
+    onUpdate = (item)=>{
+      let index;
+      this.state.items.some((obj,i)=>{
+          if(obj._id==item._id){
+            index = i;
+            return true
+          }
+      });
+      this.state.items[index] = item;
+      this.setState({items: this.state.items});
+    }
+
+    onCreate = (item)=>{
+      this.state.items.push(item);
+      this.setState({ currentItem:item ,items: this.state.items });
+    }
+
+    onDelete = (id)=>{
+      let result = this.state.items.filter(item => item.id != id);
+      this.setState({ items:result });
     }
 
     render() {
@@ -112,7 +215,11 @@
            <ItemList items={this.state.items} onSelect={this.onSelect}></ItemList>
         </tbody>
         </table>
-        {this.state.currentItem && <Detail item={this.state.currentItem} onSelect={this.onSelect}></Detail>}
+        {this.state.currentItem && <Detail item={this.state.currentItem} 
+                                          onSelect={this.onSelect} 
+                                          onUpdate={this.onUpdate} 
+                                          onCreate={this.onCreate}
+                                          onDelete={this.onDelete}></Detail>}
         </div>
      );
     }

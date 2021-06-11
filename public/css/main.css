@@ -59,3 +59,22 @@ table#detail_page_table td:last-child {
   color: #1687a7;
   font-weight: 900;
 }
+
+.detail-input {
+  width: 200px;
+}
+
+.detail-btn {
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.error-message {
+  color: #ce1212;
+  font-style: italic;
+}
+
+.success-message {
+  color: #1e6f5c;
+  font-style: italic;
+}
