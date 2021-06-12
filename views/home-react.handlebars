@@ -54,7 +54,7 @@
       this.setState({item : this.state.item });
     }
 
-    fetchData = (url,method,data) => {
+    fetchData = (url,method,data,action) => {
       this.setState({error: null,success:null});
       let reqinfo  = {
         method: method, 
@@ -69,13 +69,19 @@
         this.setState({error: error.message})
         return Promise.reject();
       })
-      .then(response => response.json())
+      .then(response =>{
+        if(response.status==200){
+          return response.json();
+        }
+        this.setState({error:"Http status code "+ response.status});
+        return Promise.reject();
+      })
       .then(result=>{
           if(!result.success){
             this.setState({error: result.error})
             return Promise.reject();
           }
-          this.setState({success:true});
+          this.setState({success:action +" success !!!"});
           return result;
       });
     }
@@ -83,13 +89,13 @@
     SaveClick=()=>{
       //update
       if(this.state.item._id){
-        this.fetchData(`/api/update/${this.state.item.id}`,'POST', JSON.stringify(this.state.item)).then(result=>{
+        this.fetchData(`/api/update/${this.state.item.id}`,'POST', JSON.stringify(this.state.item),"Update").then(result=>{
           this.props.onUpdate(this.state.item);
         });
         return;
       }
       //create
-      this.fetchData("/api/add",'POST', JSON.stringify(this.state.item)).then(result=>{
+      this.fetchData("/api/add",'POST', JSON.stringify(this.state.item),"Create").then(result=>{
         this.setState({showResult:true});
         this.props.onCreate({...this.state.item, id:result.id , _id:result._id });
       });
@@ -101,7 +107,7 @@
     }
 
     DeleteClick = ()=>{
-      this.fetchData(`/api/delete/${this.state.item.id}`,'GET', {}).then(result=>{
+      this.fetchData(`/api/delete/${this.state.item.id}`,'GET', {},"Delete").then(result=>{
         this.setState({showResult:true});
         this.props.onDelete(this.state.item.id);
         this.props.onSelect({ _id:"", id :"", name:"", Brand:"", ranking:"", comments:"", price:"", GET:""});
@@ -109,7 +115,7 @@
     }
 
     static getDerivedStateFromProps(props, state){
-      if(props.item._id != state.item._id){
+      if(props.item._id!=undefined && props.item._id != state.item._id){
          if(state.showResult){
            return { item: props.item, showResult:false};
          }
@@ -163,7 +169,7 @@
             </tbody>
         </table>
         {this.state.error && <p className="error-message">Error: {this.state.error}</p>}
-        {this.state.success && <p className="success-message">Success !!!</p>}
+        {this.state.success && <p className="success-message">{this.state.success}</p>}
         <p> <a className="default_a" onClick={this.hide}>hide detail</a> </p>
       </div>
       );
